@@ -26,6 +26,6 @@ import org.junit.platform.suite.api.Suite;
  */
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("features/recruitment.feature")
+@SelectClasspathResource("features/finance.feature")
 public class RunCucumberTest {
 }

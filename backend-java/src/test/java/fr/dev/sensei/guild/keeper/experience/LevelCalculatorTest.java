@@ -1,9 +1,10 @@
 package fr.dev.sensei.guild.keeper.experience;
 
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.fail;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Chapitre 5 — live coding « TDD sur le calcul de niveau » — <b>à développer entièrement en TDD</b>.
@@ -25,24 +26,27 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 class LevelCalculatorTest {
 
-    // TODO: red -> écrire ce test, créer LevelCalculator, le faire passer au vert
-    @Tag("todo")
+    private final LevelCalculator levelCalculator = new LevelCalculator();
+
+    // red -> écrire ce test, créer LevelCalculator, le faire passer au vert
     @Test
     void should_return_level_1_for_zero_experience() {
-        fail("Test à compléter");
+        int level = levelCalculator.calculateLevel(0);
+        assertThat(level).isEqualTo(1);
     }
 
-    // TODO: refactor -> ce deuxième palier force à généraliser la formule
-    @Tag("todo")
+    // refactor -> ce deuxième palier force à généraliser la formule
     @Test
     void should_return_level_2_from_100_experience_points() {
-        fail("Test à compléter");
+        int level = levelCalculator.calculateLevel(100);
+        assertThat(level).isEqualTo(2);
     }
 
-    // TODO: cas limite
-    @Tag("todo")
+    // cas limite
     @Test
     void should_reject_negative_experience() {
-        fail("Test à compléter");
+        assertThatThrownBy(() -> levelCalculator.calculateLevel(-1))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("L'expérience ne peut pas être négative");
     }
 }

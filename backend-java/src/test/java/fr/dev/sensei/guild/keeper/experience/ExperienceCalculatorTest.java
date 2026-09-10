@@ -6,11 +6,10 @@ import fr.dev.sensei.guild.keeper.missions.QuestAssignmentStatus;
 import fr.dev.sensei.guild.keeper.missions.QuestDifficulty;
 import fr.dev.sensei.guild.keeper.recruitment.Member;
 import fr.dev.sensei.guild.keeper.recruitment.MemberRank;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ExperienceCalculatorTest {
 
@@ -19,6 +18,12 @@ class ExperienceCalculatorTest {
     private static QuestAssignment completedQuestFor(MemberRank rank) {
         Member member = new Member("m-" + rank, "Dragan", rank, 0, 5);
         Quest quest = Quest.standalone("q-1", "Nettoyer les caves", QuestDifficulty.EASY, 100, 40);
+        return new QuestAssignment(member, quest, QuestAssignmentStatus.COMPLETED);
+    }
+
+    private static QuestAssignment completedLegendaryQuestFor(MemberRank rank) {
+        Member member = new Member("m-" + rank, "Dragan", rank, 0, 5);
+        Quest quest = Quest.standalone("q-1", "Combattre le dragon", QuestDifficulty.LEGENDARY, 200, 80);
         return new QuestAssignment(member, quest, QuestAssignmentStatus.COMPLETED);
     }
 
@@ -70,17 +75,31 @@ class ExperienceCalculatorTest {
         assertThat(reward).isEqualTo(130);
     }
 
-    // TODO: Chapitre 2 — « TP guidé - Tester le calcul d'expérience »
-    @Tag("todo")
+    // Chapitre 2 — « TP guidé - Tester le calcul d'expérience »
     @Test
     void should_add_fixed_50_xp_boost_when_legendary_quest_completed_by_novice() {
-        fail("Test à compléter");
+        // arrange : quete legendaire terminé en tant que novice
+        QuestAssignment assignment = completedLegendaryQuestFor(MemberRank.NOVICE);
+
+        // act : calculer la recompense
+        int reward = calculator.calculateExperienceReward(assignment);
+
+        // assert : recoit 50xp
+        assertThat(reward).isEqualTo(250);
     }
 
-    // TODO: Chapitre 2 — « Atelier pratique - Consolider la suite de tests GuildKeeper »
-    @Tag("todo")
+    // Chapitre 2 — « Atelier pratique - Consolider la suite de tests GuildKeeper »
     @Test
     void should_throw_business_exception_when_quest_is_not_completed() {
-        fail("Test à compléter");
+        // arrange : quete n'est pas complété
+        Member member = new Member("m-" + MemberRank.NOVICE, "Dragan", MemberRank.NOVICE, 0, 5);
+        Quest quest = Quest.standalone("q-1", "Combattre le dragon", QuestDifficulty.LEGENDARY, 200, 80);
+        QuestAssignment assignment = new QuestAssignment(member, quest, QuestAssignmentStatus.ABANDONED);
+
+        // act & assert : erreur lorsqu'on demande le gain d'experience d'une quete qui n'est pas au statut COMPLETED
+        assertThatThrownBy(() -> calculator.calculateExperienceReward(assignment))
+            .isInstanceOf(QuestNotCompletedException.class)
+            .hasMessageContaining(quest.id())
+            .hasMessageContaining(assignment.status().name());
     }
 }

@@ -13,14 +13,21 @@ const quests = questsFixture as QuestDto[];
 const [cellar, caravan, dragon] = quests;
 
 describe('findQuestById / findQuestByTitle', () => {
+  // ATTENTION : 2 tests en 1
   it('returns the matching quest when it exists', () => {
     expect(findQuestById(quests, '2')?.title).toBe('Escorter la caravane marchande');
     expect(findQuestByTitle(quests, 'Terrasser le dragon des cimes')?.id).toBe('3');
   });
 
-  // TODO: Chapitre 3 — « Atelier pratique - Consolider les tests Vitest du module quêtes »
-  todo('returns undefined when the list is empty', () => {
-    expect.fail('Test à compléter');
+  // Chapitre 3 — « Atelier pratique - Consolider les tests Vitest du module quêtes »
+  it('returns undefined when the list is empty', () => {
+    // arrange & act
+    const questById = findQuestById([], '1');
+    const questByTitle = findQuestByTitle([], 'Escorter la caravane marchande');
+
+    // assert
+    expect(questById).toBeUndefined();
+    expect(questByTitle).toBeUndefined();
   });
 });
 
@@ -33,9 +40,10 @@ describe('isQuestUnlocked', () => {
     expect(isQuestUnlocked(caravan!, ['1'])).toBe(true);
   });
 
-  // TODO: Chapitre 3 — « Atelier pratique - Consolider les tests Vitest du module quêtes »
-  todo('locks a quest whose prerequisite has not been completed', () => {
-    expect.fail('Test à compléter');
+  // Chapitre 3 — « Atelier pratique - Consolider les tests Vitest du module quêtes »
+  it('locks a quest whose prerequisite has not been completed', () => {
+    expect(isQuestUnlocked(caravan!, [])).toBe(false);
+    expect(isQuestUnlocked(dragon!, ['1'])).toBe(false);
   });
 });
 

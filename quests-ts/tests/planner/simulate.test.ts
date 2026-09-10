@@ -52,12 +52,18 @@ describe('calculateExperienceReward', () => {
     expect(reward).toBe(550);
   });
 
-  // TODO: Chapitre 3 — « Atelier pratique - Consolider les tests Vitest du module quêtes »
-  todo.each<[MemberRank, number]>([
-    // TODO: Chapitre 3 — compléter les couples (rang, expérience attendue) pour APPRENTICE, ELITE, GUILD_MASTER
-    ['APPRENTICE', 0],
-  ])('mirrors the Java experience formula for rank %s', () => {
-    expect.fail('Test à compléter');
+  // Chapitre 3 — « Atelier pratique - Consolider les tests Vitest du module quêtes »
+  it.each<[MemberRank, number]>([
+    // Chapitre 3 — compléter les couples (rang, expérience attendue) pour APPRENTICE, ELITE, GUILD_MASTER
+    ['APPRENTICE', 110],
+    ['ELITE', 130],
+    ['GUILD_MASTER', 140],
+  ])('mirrors the Java experience formula for rank %s', (rank, expected) => {
+    // Act
+    const reward = calculateExperienceReward(easyQuest, rank);
+
+    // Assert
+    expect(reward).toBe(expected);
   });
 });
 
